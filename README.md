@@ -11,14 +11,14 @@ Use Python 3.12 with the supplied dependency files. From the project directory:
 ```bash
 python3.12 -m venv .venv
 source .venv/bin/activate
-python -m pip install -r requirements-cpu.lock
-python -m pip install -r requirements-submission.txt
+python -m pip install -r requirements.txt
 python -m pip install -e . --no-deps
 python -c "import jax; print(jax.devices())"
 ```
 
-On the course TPU VM, use `requirements-tpu.lock` in place of
-`requirements-cpu.lock`. Python 3.12 must be installed before these commands.
+On the course TPU VM, install `requirements-tpu.lock` and
+`requirements-submission.txt` in place of `requirements.txt`. Python 3.12 must
+be installed before these commands.
 
 ## Supplied code
 
@@ -38,34 +38,60 @@ Submit your work to the **private GitLab project assigned by the course**.
 This public repository is for distributing the starter. Do not submit answers
 through its issues or pull requests.
 
-Each student submits `submissions/<crsid>/answers.json`. Replace `<crsid>` with
-your own CRSid. For example:
+Each student submits:
+
+- `report/<crsid>/report.pdf`: an individual report of at most **3000 words**,
+  organised by Questions 1–4 and their parts, with explanations, comparisons
+  and labelled plots.
+- `results/<crsid>/results.json`: the numerical results and paths to the report,
+  code, test log and plots, using the supplied format.
+
+The CRSid subdirectories keep the three students' submissions separate within
+one team repository. The supplied `report/report.tex` and `results/results.json`
+are templates, not completed submissions.
+
+The word limit is an upper limit; a shorter report can receive full marks.
+Question 4(b) retains its limit of 150 words within the report. Use selected tables
+where they help the discussion; the JSON records the complete numerical results.
+The two plots must appear in the report and also be saved as separate files.
+
+Replace `<crsid>` with your own CRSid. For example:
 
 ```bash
-mkdir -p submissions/bb667
-cp answers.template.json submissions/bb667/answers.json
+mkdir -p report/bb667 results/bb667
+cp results/results.json results/bb667/results.json
+cp report/report.tex report/bb667/report.tex
 ```
 
-Replace every `null` with an answer. Keep the keys and case identifiers unchanged.
-The file contains numeric results, short explanations and paths to your code,
-test log and plots. It replaces the PDF report and the separate `predictions.json`.
+The LaTeX report template is optional; any editor that exports PDF is suitable.
+For LaTeX, edit the template and compile it from the project root:
 
-| Question | JSON section | Contents |
+```bash
+pdflatex -output-directory=report/bb667 report/bb667/report.tex
+```
+
+Replace every `null` in the JSON and keep its keys and case identifiers unchanged.
+Set `report_path` to `report/bb667/report.pdf`, using your own CRSid.
+
+| Question | JSON section | Results to record |
 |---|---|---|
 | 1(a) | `q1.a` | Path to the JAX implementation. |
 | 1(b) | `q1.b` | Test files, execution log and measured errors. |
-| 2(a) | `q2.a` | Eleven coefficients and a one-sentence justification for each. |
+| 2(a) | `q2.a` | Eleven coefficient values; explain the counts in the report. |
 | 2(b) | `q2.b` | Predictions for the eleven specified kernel/size combinations. |
 | 2(c-e) | `q2.c`, `q2.d`, `q2.e` | Scaling exponents, batch-size threshold and memory-capacity limit. |
-| 3(a) | `q3.a` | Three GRM measurements, buffer sizes, scaling comparison and host-CPU comparison. |
+| 3(a) | `q3.a` | Three GRM measurements, buffer sizes, fitted exponent and host-CPU comparison. |
 | 3(b) | `q3.b` | Eigenvector timings, their ratio and the two angles. |
-| 3(c) | `q3.c` | Six scan measurements, the threshold comparison and the scan plot. |
+| 3(c) | `q3.c` | Six scan measurements, the first tested crossing and the scan plot. |
 | 4(a) | `q4.a` | Path to the roofline plot. |
-| 4(b) | `q4.b` | Your interpretation, at most 150 words. |
+| 4(b) | Report only | Interpretation, at most 150 words. |
 
 `q3.environment` records the TPU device descriptions and JAX version. Questions
 1 and 2 are individual work. Team members may share Question 3 measurements and
-plots; each student writes their own explanations and Question 4(b) interpretation.
+plots; each student writes their own report, including all explanations and the
+Question 4(b) interpretation.
+
+Use the supplied JSON template, format version 2.0.
 
 ### Units and files
 
@@ -77,28 +103,54 @@ plots; each student writes their own explanations and Question 4(b) interpretati
 - The two Question 1 angles come from the full `n × k` outputs. Question 3(b)
   compares the first two columns, as specified in the brief.
 
-The schema in `answers.schema.json` describes each field. To save results from
-Python, use `json.dump(answers, file, indent=2, allow_nan=False)`; convert NumPy or
+The schema in `results.schema.json` describes each field. To save results from
+Python, use `json.dump(results, file, indent=2, allow_nan=False)`; convert NumPy or
 JAX scalars with `float(...)` or `int(...)`, and arrays with `.tolist()`.
 
 ### Validation
 
-Run from the project root:
+Run from the project root to check all completed submissions in the team repo:
 
 ```bash
-python validate_submission.py submissions/bb667/answers.json
+python check_submission.py
 ```
 
-The validator checks required fields, data types, finite numbers, file paths and
-the 150-word limit. It does not mark the answers or execute the submitted code.
-A successful check also requires the referenced files to exist and be non-empty.
+To check only your submission:
+
+```bash
+python check_submission.py results/bb667/results.json
+```
+
+The checker follows the same approach as the S1 `check_submission.py`: it checks
+the README, opens the report PDF, validates the JSON format and checks referenced
+files. It prints `PASS` or `FAIL` and exits with a non-zero status on failure.
+It does not assess numerical correctness, report content or word counts, or
+execute submitted code.
 
 During preparation, `--draft` permits unanswered `null` fields and skips checking
 whether the referenced files exist:
 
 ```bash
-python validate_submission.py submissions/bb667/answers.json --draft
+python check_submission.py results/bb667/results.json --draft
 ```
 
 Run the full check before submitting. Use tags `<crsid>-q1` through `<crsid>-q4`
 to identify your commits for each question without colliding with teammates' tags.
+
+### Repository contents
+
+```text
+assignment.pdf              # coursework brief, included in the private handout
+README.md                   # setup and submission instructions
+requirements.txt            # CPU and submission-check dependencies
+check_submission.py         # run before submitting
+report/report.tex           # optional report skeleton
+results/results.json        # numerical-results template, initially null
+results.schema.json         # exact field names and types
+src/strata/                 # supplied scientific code
+```
+
+The public starter omits `assignment.pdf`; use the brief distributed by the course.
+The optional `.gitlab-ci.yml` runs the same check on the private GitLab project.
+It requires at least one completed submission and reports incomplete submissions
+as failures. Code, tests and plots must also be committed.

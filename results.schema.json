@@ -1,11 +1,11 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/borisbolliet/strata-starter/main/answers.schema.json",
-  "title": "C1 coursework 2026 submission, version 1.0",
+  "$id": "https://raw.githubusercontent.com/borisbolliet/strata-starter/main/results.schema.json",
+  "title": "C1 coursework 2026 results accompanying a report, version 2.0",
   "type": "object",
   "properties": {
     "schema_version": {
-      "const": "1.0"
+      "const": "2.0"
     },
     "student": {
       "type": "object",
@@ -29,6 +29,16 @@
         "team_id"
       ],
       "additionalProperties": false
+    },
+    "report_path": {
+      "type": "string",
+      "description": "Individual report: report/<crsid>/report.pdf.",
+      "x-answer": true,
+      "minLength": 1,
+      "format": "relative-path",
+      "x-extensions": [
+        ".pdf"
+      ]
     },
     "q1": {
       "type": "object",
@@ -136,18 +146,10 @@
                   "description": "Coefficient alpha from the counting table.",
                   "x-answer": true,
                   "minimum": 0
-                },
-                "explanation": {
-                  "type": "string",
-                  "description": "One sentence explaining the count.",
-                  "x-answer": true,
-                  "minLength": 1,
-                  "pattern": "\\S"
                 }
               },
               "required": [
-                "value",
-                "explanation"
+                "value"
               ],
               "additionalProperties": false
             },
@@ -159,18 +161,10 @@
                   "description": "Coefficient beta from the counting table.",
                   "x-answer": true,
                   "minimum": 0
-                },
-                "explanation": {
-                  "type": "string",
-                  "description": "One sentence explaining the count.",
-                  "x-answer": true,
-                  "minLength": 1,
-                  "pattern": "\\S"
                 }
               },
               "required": [
-                "value",
-                "explanation"
+                "value"
               ],
               "additionalProperties": false
             },
@@ -182,18 +176,10 @@
                   "description": "Coefficient gamma from the counting table.",
                   "x-answer": true,
                   "minimum": 0
-                },
-                "explanation": {
-                  "type": "string",
-                  "description": "One sentence explaining the count.",
-                  "x-answer": true,
-                  "minLength": 1,
-                  "pattern": "\\S"
                 }
               },
               "required": [
-                "value",
-                "explanation"
+                "value"
               ],
               "additionalProperties": false
             },
@@ -205,18 +191,10 @@
                   "description": "Coefficient delta from the counting table.",
                   "x-answer": true,
                   "minimum": 0
-                },
-                "explanation": {
-                  "type": "string",
-                  "description": "One sentence explaining the count.",
-                  "x-answer": true,
-                  "minLength": 1,
-                  "pattern": "\\S"
                 }
               },
               "required": [
-                "value",
-                "explanation"
+                "value"
               ],
               "additionalProperties": false
             },
@@ -228,18 +206,10 @@
                   "description": "Coefficient epsilon from the counting table.",
                   "x-answer": true,
                   "minimum": 0
-                },
-                "explanation": {
-                  "type": "string",
-                  "description": "One sentence explaining the count.",
-                  "x-answer": true,
-                  "minLength": 1,
-                  "pattern": "\\S"
                 }
               },
               "required": [
-                "value",
-                "explanation"
+                "value"
               ],
               "additionalProperties": false
             },
@@ -251,18 +221,10 @@
                   "description": "Coefficient zeta from the counting table.",
                   "x-answer": true,
                   "minimum": 0
-                },
-                "explanation": {
-                  "type": "string",
-                  "description": "One sentence explaining the count.",
-                  "x-answer": true,
-                  "minLength": 1,
-                  "pattern": "\\S"
                 }
               },
               "required": [
-                "value",
-                "explanation"
+                "value"
               ],
               "additionalProperties": false
             },
@@ -274,18 +236,10 @@
                   "description": "Coefficient eta from the counting table.",
                   "x-answer": true,
                   "minimum": 0
-                },
-                "explanation": {
-                  "type": "string",
-                  "description": "One sentence explaining the count.",
-                  "x-answer": true,
-                  "minLength": 1,
-                  "pattern": "\\S"
                 }
               },
               "required": [
-                "value",
-                "explanation"
+                "value"
               ],
               "additionalProperties": false
             },
@@ -297,18 +251,10 @@
                   "description": "Coefficient theta from the counting table.",
                   "x-answer": true,
                   "minimum": 0
-                },
-                "explanation": {
-                  "type": "string",
-                  "description": "One sentence explaining the count.",
-                  "x-answer": true,
-                  "minLength": 1,
-                  "pattern": "\\S"
                 }
               },
               "required": [
-                "value",
-                "explanation"
+                "value"
               ],
               "additionalProperties": false
             },
@@ -320,18 +266,10 @@
                   "description": "Coefficient kappa from the counting table.",
                   "x-answer": true,
                   "minimum": 0
-                },
-                "explanation": {
-                  "type": "string",
-                  "description": "One sentence explaining the count.",
-                  "x-answer": true,
-                  "minLength": 1,
-                  "pattern": "\\S"
                 }
               },
               "required": [
-                "value",
-                "explanation"
+                "value"
               ],
               "additionalProperties": false
             },
@@ -343,18 +281,10 @@
                   "description": "Coefficient mu from the counting table.",
                   "x-answer": true,
                   "minimum": 0
-                },
-                "explanation": {
-                  "type": "string",
-                  "description": "One sentence explaining the count.",
-                  "x-answer": true,
-                  "minLength": 1,
-                  "pattern": "\\S"
                 }
               },
               "required": [
-                "value",
-                "explanation"
+                "value"
               ],
               "additionalProperties": false
             },
@@ -366,18 +296,10 @@
                   "description": "Coefficient nu from the counting table.",
                   "x-answer": true,
                   "minimum": 0
-                },
-                "explanation": {
-                  "type": "string",
-                  "description": "One sentence explaining the count.",
-                  "x-answer": true,
-                  "minLength": 1,
-                  "pattern": "\\S"
                 }
               },
               "required": [
-                "value",
-                "explanation"
+                "value"
               ],
               "additionalProperties": false
             }
@@ -1256,13 +1178,6 @@
               "description": "Slope from fitting log(t) against log(n).",
               "x-answer": true
             },
-            "scaling_comparison": {
-              "type": "string",
-              "description": "Compare the fitted exponent with the Question 2(c) prediction.",
-              "x-answer": true,
-              "minLength": 1,
-              "pattern": "\\S"
-            },
             "host_time_s": {
               "type": "number",
               "description": "Host CPU execution time, in seconds.",
@@ -1279,7 +1194,6 @@
           "required": [
             "grm",
             "fitted_exponent",
-            "scaling_comparison",
             "host_time_s",
             "speedup"
           ],
@@ -1634,13 +1548,6 @@
                 4096
               ]
             },
-            "threshold_comparison": {
-              "type": "string",
-              "description": "Compare the first tested crossing with B_star.",
-              "x-answer": true,
-              "minLength": 1,
-              "pattern": "\\S"
-            },
             "plot_path": {
               "type": "string",
               "description": "Plot of execution time against B.",
@@ -1657,7 +1564,6 @@
           "required": [
             "scan",
             "first_compute_bound_B",
-            "threshold_comparison",
             "plot_path"
           ],
           "additionalProperties": false
@@ -1694,28 +1600,10 @@
             "plot_path"
           ],
           "additionalProperties": false
-        },
-        "b": {
-          "type": "object",
-          "properties": {
-            "interpretation": {
-              "type": "string",
-              "description": "Individual explanation, at most 150 whitespace-separated words.",
-              "x-answer": true,
-              "minLength": 1,
-              "pattern": "\\S",
-              "x-max-words": 150
-            }
-          },
-          "required": [
-            "interpretation"
-          ],
-          "additionalProperties": false
         }
       },
       "required": [
-        "a",
-        "b"
+        "a"
       ],
       "additionalProperties": false
     }
@@ -1723,6 +1611,7 @@
   "required": [
     "schema_version",
     "student",
+    "report_path",
     "q1",
     "q2",
     "q3",

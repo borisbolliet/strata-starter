@@ -1,9 +1,10 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "2.0",
   "student": {
     "crsid": null,
     "team_id": null
   },
+  "report_path": null,
   "q1": {
     "a": {
       "implementation_path": "src/strata/kernels.py"
@@ -22,48 +23,37 @@
   "q2": {
     "a": {
       "alpha": {
-        "value": null,
-        "explanation": null
+        "value": null
       },
       "beta": {
-        "value": null,
-        "explanation": null
+        "value": null
       },
       "gamma": {
-        "value": null,
-        "explanation": null
+        "value": null
       },
       "delta": {
-        "value": null,
-        "explanation": null
+        "value": null
       },
       "epsilon": {
-        "value": null,
-        "explanation": null
+        "value": null
       },
       "zeta": {
-        "value": null,
-        "explanation": null
+        "value": null
       },
       "eta": {
-        "value": null,
-        "explanation": null
+        "value": null
       },
       "theta": {
-        "value": null,
-        "explanation": null
+        "value": null
       },
       "kappa": {
-        "value": null,
-        "explanation": null
+        "value": null
       },
       "mu": {
-        "value": null,
-        "explanation": null
+        "value": null
       },
       "nu": {
-        "value": null,
-        "explanation": null
+        "value": null
       }
     },
     "b": {
@@ -201,7 +191,6 @@
         }
       },
       "fitted_exponent": null,
-      "scaling_comparison": null,
       "host_time_s": null,
       "speedup": null
     },
@@ -264,16 +253,12 @@
         }
       },
       "first_compute_bound_B": null,
-      "threshold_comparison": null,
       "plot_path": "figures/scan.pdf"
     }
   },
   "q4": {
     "a": {
       "plot_path": "figures/roofline.pdf"
-    },
-    "b": {
-      "interpretation": null
     }
   }
 }

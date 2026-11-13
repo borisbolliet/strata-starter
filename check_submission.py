@@ -11,10 +11,11 @@ import sys
 
 try:
     from jsonschema import Draft202012Validator
+    from pypdf import PdfReader
 except ImportError:
-    raise SystemExit("Install the validator dependency: python -m pip install -r requirements-submission.txt")
+    raise SystemExit("Install check dependencies: python -m pip install -r requirements-submission.txt")
 
-SCHEMA_PATH = Path(__file__).with_name("answers.schema.json")
+SCHEMA_PATH = Path(__file__).with_name("results.schema.json")
 
 
 def load_json(path):
@@ -71,10 +72,6 @@ def validate(data, *, root=None, draft=False):
         location = label(parts)
         if isinstance(value, float) and not math.isfinite(value):
             errors.append(f"{location}: use a finite number")
-        if isinstance(value, str) and "x-max-words" in node:
-            count = len(value.split())
-            if count > node["x-max-words"]:
-                errors.append(f"{location}: {count} words; maximum is {node['x-max-words']}")
         if node.get("format") != "relative-path" or not isinstance(value, str):
             continue
         path = PurePosixPath(value)
@@ -103,7 +100,7 @@ def validate_file(path, *, root, draft=False):
     path, root = Path(path), Path(root).resolve()
     try:
         if not path.resolve().is_relative_to(root):
-            return None, [f"{path}: answer file resolves outside the project"]
+            return None, [f"{path}: results file resolves outside the project"]
         data = load_json(path)
     except (OSError, ValueError) as exc:
         return None, [f"{path}: {exc}"]
@@ -112,30 +109,57 @@ def validate_file(path, *, root, draft=False):
         student = data.get("student")
         crsid = student.get("crsid") if isinstance(student, dict) else None
         if isinstance(crsid, str):
-            expected = root / "submissions" / crsid / "answers.json"
+            expected = root / "results" / crsid / "results.json"
             if path.resolve() != expected.resolve():
-                errors.append("student.crsid: save this file as submissions/<crsid>/answers.json")
+                errors.append("student.crsid: save this file as results/<crsid>/results.json")
+            if data.get("report_path") != f"report/{crsid}/report.pdf":
+                errors.append("report_path: use report/<crsid>/report.pdf with your own CRSid")
+        readme = root / "README.md"
+        try:
+            if not readme.resolve().is_relative_to(root) or not readme.is_file() or not readme.stat().st_size:
+                errors.append("README.md: a non-empty file within the project is required")
+        except (OSError, RuntimeError):
+            errors.append("README.md: cannot read file")
+        # Only open the report after validating its path and file existence.
+        if isinstance(data.get("report_path"), str) and not any(e.startswith("report_path:") for e in errors):
+            try:
+                reader = PdfReader(root / data["report_path"])
+                if reader.is_encrypted:
+                    errors.append("report_path: submit an unencrypted PDF")
+                elif not reader.pages:
+                    errors.append("report_path: PDF has no pages")
+            except Exception as exc:
+                errors.append(f"report_path: cannot read PDF ({exc})")
     return data, errors
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("answers", type=Path)
+    parser.add_argument("results", type=Path, nargs="?", help="One results file; otherwise check all results/<crsid>/results.json files.")
     parser.add_argument("--root", type=Path, default=Path.cwd(), help="Project root (default: current directory).")
     parser.add_argument("--draft", action="store_true", help="Allow null answers and skip file-existence checks.")
     args = parser.parse_args()
-    _, errors = validate_file(args.answers, root=args.root, draft=args.draft)
-    if errors:
-        for error in errors[:30]:
-            print(f"- {error}", file=sys.stderr)
-        if len(errors) > 30:
-            print(f"... and {len(errors) - 30} further errors", file=sys.stderr)
+    paths = ([args.results] if args.results else
+             [args.root / "results/results.json"] if args.draft else
+             sorted(args.root.glob("results/*/results.json")))
+    if not paths:
+        print("FAIL: No results/<crsid>/results.json files found. Copy the template as described in README.md.", file=sys.stderr)
         return 1
-    if args.draft:
-        print("Draft format valid. Run again without --draft before submission.")
-    else:
-        print("Submission format and referenced files are valid. Numerical correctness has not been assessed.")
-    return 0
+    failed = False
+    for path in paths:
+        _, errors = validate_file(path, root=args.root, draft=args.draft)
+        if errors:
+            failed = True
+            print(f"FAIL: {path}", file=sys.stderr)
+            for error in errors[:30]:
+                print(f"- {error}", file=sys.stderr)
+            if len(errors) > 30:
+                print(f"... and {len(errors) - 30} further errors", file=sys.stderr)
+        else:
+            print(f"PASS: {path}" + (" (draft; files not checked)" if args.draft else " (format, report PDF and files)"))
+    if not failed:
+        print("Numerical correctness and report content have not been assessed.")
+    return int(failed)
 
 
 if __name__ == "__main__":
