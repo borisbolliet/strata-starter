@@ -1,4 +1,4 @@
-"""Independent NumPy implementation (float64 by default) of every formula.
+"""Supplied NumPy reference implementations (float64 by default).
 
 Shares no code with the JAX kernels. Used by the tests (float64) and as the
 host-CPU GRM baseline in Question 3(a) (float32, the same formula, one BLAS call).

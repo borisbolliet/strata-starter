@@ -16,9 +16,14 @@ python -m pip install -e . --no-deps
 python -c "import jax; print(jax.devices())"
 ```
 
-On the course TPU VM, install `requirements-tpu.lock` and
-`requirements-submission.txt` in place of `requirements.txt`. Python 3.12 must
-be installed before these commands.
+On the course TPU VM, replace the `requirements.txt` installation with:
+
+```bash
+python -m pip install -r requirements-tpu.lock -r requirements-course.txt
+```
+
+Both setups include Matplotlib, pytest and the submission checker. Python 3.12
+must be installed before creating the environment.
 
 ## Supplied code
 
@@ -33,6 +38,8 @@ Write the five JAX functions in `src/strata/kernels.py` and add the tests reques
 in Question 1. The supplied NumPy implementations are references for those tests.
 
 ## Submitting answers
+
+**Deadline: Wednesday 16 December 2026 at 23:59 (UK time).**
 
 Submit your work to the **private GitLab project assigned by the course**.
 This public repository is for distributing the starter. Do not submit answers
@@ -49,6 +56,12 @@ Each student submits:
 The CRSid subdirectories keep the three students' submissions separate within
 one team repository. The supplied `report/report.tex` and `results/results.json`
 are templates, not completed submissions.
+
+Start a branch named after your CRSid from the starter, for example
+`git switch -c bb667`. Complete Questions 1 and 2 individually and tag their
+commits before sharing code for the team work. Keep your report and results on
+your own branch. The final `<crsid>-q4` tag must contain your complete submission;
+the earlier tags preserve the work for each question.
 
 The word limit is an upper limit; a shorter report can receive full marks.
 Question 4(b) retains its limit of 150 words within the report. Use selected tables
@@ -136,6 +149,17 @@ python check_submission.py results/bb667/results.json --draft
 
 Run the full check before submitting. Use tags `<crsid>-q1` through `<crsid>-q4`
 to identify your commits for each question without colliding with teammates' tags.
+Push your branch and each tag to the assigned private GitLab project. For example,
+after committing your final submission:
+
+```bash
+git tag bb667-q4
+git push origin bb667
+git push origin bb667-q4
+```
+
+Push the `bb667-q1`, `bb667-q2` and `bb667-q3` tags in the same way. Here `origin`
+must point to the assigned private GitLab project, not the public starter.
 
 ### Repository contents
 
