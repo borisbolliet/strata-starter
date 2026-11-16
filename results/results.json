@@ -1,10 +1,10 @@
 {
-  "schema_version": "2.0",
+  "schema_version": "2.1",
   "student": {
     "crsid": null,
     "team_id": null
   },
-  "report_path": null,
+  "report_path": "report/report.pdf",
   "q1": {
     "a": {
       "implementation_path": "src/strata/kernels.py"

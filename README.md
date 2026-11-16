@@ -41,50 +41,48 @@ in Question 1. The supplied NumPy implementations are references for those tests
 
 **Deadline: Wednesday 16 December 2026 at 23:59 (UK time).**
 
-Submit your work to the **private GitLab project assigned by the course**.
+Submit your work to **your own private GitLab project** at:
+
+```text
+https://gitlab.developers.cam.ac.uk/phy/data-intensive-science-mphil/assessments/c1_coursework/<YourCRSid>
+```
+
+Replace `<YourCRSid>` with your CRSid. Only you and authorised course staff
+will have access to this project. Your access expires at the deadline.
+Do not grant other students, including teammates, access to your submission project.
 This public repository is for distributing the starter. Do not submit answers
 through its issues or pull requests.
 
 Each student submits:
 
-- `report/<crsid>/report.pdf`: an individual report of at most **3000 words**,
+- `report/report.pdf`: an individual report of at most **3000 words**,
   organised by Questions 1–4 and their parts, with explanations, comparisons
   and labelled plots.
-- `results/<crsid>/results.json`: the numerical results and paths to the report,
+- `results/results.json`: the numerical results and paths to the report,
   code, test log and plots, using the supplied format.
 
-The CRSid subdirectories keep the three students' submissions separate within
-one team repository. The supplied `report/report.tex` and `results/results.json`
-are templates, not completed submissions.
-
-Start a branch named after your CRSid from the starter, for example
-`git switch -c bb667`. Complete Questions 1 and 2 individually and tag their
-commits before sharing code for the team work. Keep your report and results on
-your own branch. The final `<crsid>-q4` tag must contain your complete submission;
-the earlier tags preserve the work for each question.
+Complete Questions 1 and 2 individually and tag their commits before sharing
+code for the team work. For Questions 3 and 4, include the team's code,
+measurements and plots in your own project. Each student writes their own
+report and completes their own results file. Share only the material permitted
+for the team questions; keep individual reports and Questions 1 and 2 private.
+The final `<crsid>-q4` tag must contain your complete submission; the earlier
+tags preserve the work for each question.
 
 The word limit is an upper limit; a shorter report can receive full marks.
 Question 4(b) retains its limit of 150 words within the report. Use selected tables
 where they help the discussion; the JSON records the complete numerical results.
 The two plots must appear in the report and also be saved as separate files.
 
-Replace `<crsid>` with your own CRSid. For example:
-
-```bash
-mkdir -p report/bb667 results/bb667
-cp results/results.json results/bb667/results.json
-cp report/report.tex report/bb667/report.tex
-```
-
 The LaTeX report template is optional; any editor that exports PDF is suitable.
 For LaTeX, edit the template and compile it from the project root:
 
 ```bash
-pdflatex -output-directory=report/bb667 report/bb667/report.tex
+pdflatex -output-directory=report report/report.tex
 ```
 
 Replace every `null` in the JSON and keep its keys and case identifiers unchanged.
-Set `report_path` to `report/bb667/report.pdf`, using your own CRSid.
+Keep `report_path` set to `report/report.pdf`. Enter your CRSid in `student.crsid`.
 
 | Question | JSON section | Results to record |
 |---|---|---|
@@ -104,7 +102,13 @@ Set `report_path` to `report/bb667/report.pdf`, using your own CRSid.
 plots; each student writes their own report, including all explanations and the
 Question 4(b) interpretation.
 
-Use the supplied JSON template, format version 2.0.
+Use the supplied JSON template, format version 2.1.
+
+If you started with version 2.0, move your completed report to `report/report.pdf`
+and your completed JSON to `results/results.json`. Set `schema_version` to `2.1`
+and `report_path` to `report/report.pdf`. The numerical fields are unchanged.
+Preserve your completed answers when updating the template, and commit all
+referenced files in your own project.
 
 ### Units and files
 
@@ -122,16 +126,10 @@ JAX scalars with `float(...)` or `int(...)`, and arrays with `.tolist()`.
 
 ### Validation
 
-Run from the project root to check all completed submissions in the team repo:
+Run from your project root to check your submission:
 
 ```bash
 python check_submission.py
-```
-
-To check only your submission:
-
-```bash
-python check_submission.py results/bb667/results.json
 ```
 
 The checker follows the same approach as the S1 `check_submission.py`: it checks
@@ -144,22 +142,24 @@ During preparation, `--draft` permits unanswered `null` fields and skips checkin
 whether the referenced files exist:
 
 ```bash
-python check_submission.py results/bb667/results.json --draft
+python check_submission.py --draft
 ```
 
 Run the full check before submitting. Use tags `<crsid>-q1` through `<crsid>-q4`
-to identify your commits for each question without colliding with teammates' tags.
-Push your branch and each tag to the assigned private GitLab project. For example,
+to identify your commits for each question. Replace `<crsid>` with your CRSid.
+Push your branch and each tag to your own private GitLab project. For example,
 after committing your final submission:
 
 ```bash
 git tag bb667-q4
-git push origin bb667
+git push origin HEAD
 git push origin bb667-q4
 ```
 
 Push the `bb667-q1`, `bb667-q2` and `bb667-q3` tags in the same way. Here `origin`
 must point to the assigned private GitLab project, not the public starter.
+`git push origin HEAD` pushes the branch currently checked out. The tags
+identify commits within your own repository; they do not give teammates access.
 
 ### Repository contents
 
@@ -176,5 +176,5 @@ src/strata/                 # supplied scientific code
 
 The public starter omits `assignment.pdf`; use the brief distributed by the course.
 The optional `.gitlab-ci.yml` runs the same check on the private GitLab project.
-It requires at least one completed submission and reports incomplete submissions
-as failures. Code, tests and plots must also be committed.
+It checks `results/results.json` and reports incomplete submissions as failures.
+Code, tests and plots must also be committed.

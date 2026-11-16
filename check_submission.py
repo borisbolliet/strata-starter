@@ -106,14 +106,9 @@ def validate_file(path, *, root, draft=False):
         return None, [f"{path}: {exc}"]
     errors = validate(data, root=root, draft=draft)
     if not draft and isinstance(data, dict):
-        student = data.get("student")
-        crsid = student.get("crsid") if isinstance(student, dict) else None
-        if isinstance(crsid, str):
-            expected = root / "results" / crsid / "results.json"
-            if path.resolve() != expected.resolve():
-                errors.append("student.crsid: save this file as results/<crsid>/results.json")
-            if data.get("report_path") != f"report/{crsid}/report.pdf":
-                errors.append("report_path: use report/<crsid>/report.pdf with your own CRSid")
+        expected = root / "results/results.json"
+        if path.resolve() != expected.resolve():
+            errors.append("results: save this file as results/results.json in your own project")
         readme = root / "README.md"
         try:
             if not readme.resolve().is_relative_to(root) or not readme.is_file() or not readme.stat().st_size:
@@ -135,16 +130,11 @@ def validate_file(path, *, root, draft=False):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("results", type=Path, nargs="?", help="One results file; otherwise check all results/<crsid>/results.json files.")
+    parser.add_argument("results", type=Path, nargs="?", help="Results file (default: results/results.json under the project root).")
     parser.add_argument("--root", type=Path, default=Path.cwd(), help="Project root (default: current directory).")
     parser.add_argument("--draft", action="store_true", help="Allow null answers and skip file-existence checks.")
     args = parser.parse_args()
-    paths = ([args.results] if args.results else
-             [args.root / "results/results.json"] if args.draft else
-             sorted(args.root.glob("results/*/results.json")))
-    if not paths:
-        print("FAIL: No results/<crsid>/results.json files found. Copy the template as described in README.md.", file=sys.stderr)
-        return 1
+    paths = [args.results] if args.results else [args.root / "results/results.json"]
     failed = False
     for path in paths:
         _, errors = validate_file(path, root=args.root, draft=args.draft)
